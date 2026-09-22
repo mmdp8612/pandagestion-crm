@@ -399,6 +399,16 @@ Implementado:
 - Se verificaron sobre la conexion MySQL activa la portada, el catalogo, una ficha publica con imagen, el login, la redireccion de `/admin`, sitemap y robots. Esta etapa no cambio rutas, controladores, vistas ni reglas de negocio.
 - PHPUnit continua forzando SQLite en memoria mediante `phpunit.xml`; esto mantiene la suite aislada de la base poblada. Una ejecucion integral contra MySQL requiere crear primero una base de pruebas separada y descartable.
 
+### 22. Repositorio Git remoto
+
+- El proyecto fue inicializado como repositorio Git sobre la rama `main` y publicado en `https://github.com/mmdp8612/pandagestion-crm.git`.
+- El commit raiz `3b36789` (`feat: initial PandaGestion CRM`) contiene el estado funcional completo acumulado hasta esta etapa. El remoto estaba vacio y la publicacion creo `origin/main` sin integrar ni sobrescribir historial previo y sin usar `force`.
+- Antes del commit se auditaron los 267 archivos candidatos. No se detectaron claves privadas, tokens ni secretos de alta confianza, y `composer.json` supero `composer validate --no-check-publish`.
+- `.env`, la base SQLite local, `vendor`, `node_modules`, el build de Vite, el enlace `public/storage`, sesiones, cache, logs, logos e imagenes cargadas quedaron excluidos mediante las reglas de Git existentes.
+- El archivo accidental `count())`, que contenia unicamente una salida fallida de Tinker, fue retirado antes de crear el historial.
+- `README.md` dejo de ser el texto generico de Laravel y ahora documenta funcionalidades, instalacion con MySQL/MariaDB, Storage, primer usuario administrador, datos demostrativos, pruebas y archivos locales excluidos.
+- Los archivos multimedia persistidos en Storage no forman parte del repositorio y requieren una estrategia de respaldo separada de Git.
+
 ## Rutas actuales
 
 Todas las rutas con `auth` tambien ejecutan `EnsureUserIsActive`; una cuenta desactivada pierde la sesion antes de llegar al controlador.
@@ -653,6 +663,7 @@ La novena migracion de Bienes Raices agrega `VideoUrl` como texto opcional de ha
 - Seeder de Tipos de moneda: `database/seeders/CurrencyTypesSeeder.php`.
 - Datos demostrativos: `database/seeders/DemoPropertiesSeeder.php`, `database/seeders/data/demo_properties.json` y `tests/Feature/Database/DemoPropertiesSeederTest.php`.
 - Configuracion de Spatie: `config/permission.php`.
+- Repositorio e instalacion: `README.md`, `.gitignore`, `.gitattributes` y `.env.example`.
 
 ## Base historica `database.sql`
 
@@ -817,6 +828,8 @@ En Windows puede ser necesario usar `vendor\\bin\\pint`.
 - MySQL/MariaDB es el motor activo del entorno local. SQLite queda unicamente como respaldo historico de esta migracion y como motor aislado de la suite automatizada mientras no exista una base MySQL exclusiva para tests.
 - Nunca se debe ejecutar una suite con `RefreshDatabase`, `migrate:fresh` o una operacion destructiva sobre `pandagestion_crm`; cualquier prueba integral de MySQL debe apuntar a una base separada y descartable.
 - El fondo del login se resuelve con un SVG local repetible y CSS propio. No usa fotografias, JavaScript, peticiones externas ni una dependencia grafica adicional; la capa completa se marca como decorativa para tecnologias de asistencia.
+- `origin/main` es la referencia remota del codigo fuente. Los commits nunca deben incluir `.env`, bases pobladas, credenciales, sesiones, cache, logs ni archivos multimedia cargados por usuarios.
+- Git versiona codigo, migraciones, seeders y documentacion; los logos e imagenes de propiedades requieren copias de seguridad independientes junto con la base MySQL/MariaDB.
 - No se uso Breeze, Jetstream ni Laravel UI; la autenticacion es pequena y explicita.
 - No se agregaron repositorios, DTOs ni servicios sin una necesidad concreta.
 - Los controladores actuales son pequenos; las validaciones viven en Form Requests.
